@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/binary"
 	"fmt"
-	"math"
 	"strings"
 	"unicode"
 )
@@ -67,5 +66,5 @@ func capitalize(firstWord, secondWord []byte, capitalizeFlags uint16) (string, s
 }
 
 func flagSet(flags uint16, i int) bool {
-	return math.MaxUint16&(flags&(1<<i)) != 0
+	return flags&(1<<i) != 0
 }
