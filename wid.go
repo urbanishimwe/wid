@@ -22,7 +22,7 @@ func Generate() (string, error) {
 
 	// guider is a map to the following random properties in this order:
 	// indices of words from list(4 bytes), capitalization flags(2 bytes), separator index(1 byte), 3 digits indices(3 byte).
-	// giving more than 7776 * 10 * 10 * 2 * 7776 * 10 unique passphrases.
+	// giving more than 7776 * 10 * 10 * 2 * 7776 * 10 unique id.
 	var guider [10]byte
 	_, err := rand.Read(guider[:])
 	if err != nil {
