@@ -22,10 +22,10 @@ func TestGenerate(t *testing.T) {
 	}
 }
 
-func TestGenerateLower(t *testing.T) {
+func TestGenerateUpper(t *testing.T) {
 	uniqueMap := map[string]bool{}
 	for i := 0; i < generateCount; i++ {
-		id, err := GenerateLower()
+		id, err := GenerateUpper()
 		if err != nil {
 			t.Fatal(err)
 		}

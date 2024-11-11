@@ -10,20 +10,24 @@ import (
 )
 
 var (
-	separators = [...]string{"-", "_"}
-	digits     = [...]string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
+	digits = [...]string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
 )
 
-// Generate Id in the format: {first word} {2 digits} {separator} {second word} {1 digit}.
-// Characters of words are uppercased randomly.
+// Generate Id in the format: {first word} {2 digits} {second word} {1 digit}.
 //
 // Error occurs if we can't read from cryptographically secure random number generator.
 func Generate() (string, error) {
+	id, err := GenerateUpper()
+	return strings.ToLower(id), err
+}
+
+// GenerateUpper is like Generate but characters of words are uppercased randomly.
+func GenerateUpper() (string, error) {
 
 	// guider is a map to the following random properties in this order:
-	// indices of words from list(4 bytes), capitalization flags(2 bytes), separator index(1 byte), 3 digits indices(3 byte).
-	// giving more than 7776 * 10 * 10 * 2 * 7776 * 10 unique id.
-	var guider [10]byte
+	// indices of words from list(4 bytes), capitalization flags(2 bytes), and 3 digits indices(3 byte).
+	// giving more than 7776 * 10 * 10 * 7776 * 10 unique ids.
+	var guider [9]byte
 	_, err := rand.Read(guider[:])
 	if err != nil {
 		return "", err
@@ -32,20 +36,13 @@ func Generate() (string, error) {
 	firstWord := wordsList[binary.BigEndian.Uint16(guider[:2])%uint16(len(wordsList))]
 	secondWord := wordsList[binary.BigEndian.Uint16(guider[2:4])%uint16(len(wordsList))]
 	capitalizeFlags := binary.BigEndian.Uint16(guider[4:6])
-	separator := separators[int(guider[6])%len(separators)]
-	firstDigit := digits[int(guider[7])%len(digits)]
-	secondDigit := digits[int(guider[8])%len(digits)]
-	thirdDigit := digits[int(guider[9])%len(digits)]
+	firstDigit := digits[int(guider[6])%len(digits)]
+	secondDigit := digits[int(guider[7])%len(digits)]
+	thirdDigit := digits[int(guider[8])%len(digits)]
 
 	firstWord, secondWord = capitalize([]byte(firstWord), []byte(secondWord), capitalizeFlags)
 
-	return fmt.Sprintf("%s%s%s%s%s%s", firstWord, firstDigit, secondDigit, separator, secondWord, thirdDigit), nil
-}
-
-// GenerateLower is the same as Generate but all characters are in lowercase.
-func GenerateLower() (string, error) {
-	id, err := Generate()
-	return strings.ToLower(id), err
+	return fmt.Sprintf("%s%s%s%s%s", firstWord, firstDigit, secondDigit, secondWord, thirdDigit), nil
 }
 
 // capitalization is based on bit-set flag at a certain index.
