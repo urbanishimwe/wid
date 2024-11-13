@@ -2,6 +2,8 @@
 
 Generate human-readable random ids.
 
+**This is not something to use if you want secure passphrases or globally unique ids.**
+
 
 Thanks to the list of words offered by [https://www.eff.org/dice](https://www.eff.org/dice). The dictionary currently contains **7776** words which would give us(according to our format) **60466176000** ids with `Generate`.
 
